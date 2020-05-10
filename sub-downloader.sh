@@ -16,6 +16,9 @@ function printUsage {
     -l, --languages <languages-list>:\n
     \t Specify a comma-separated list of languages to download.\n
     \t example: sub-downloader.sh -l es,en\n\n
+    -os, --opensubtitles <opensubtitles credentials>:\n
+    \t Opensubtitles credentials <username>:<password>.\n
+    \t example: sub-downloader.sh -os rick mycoolpassword\n\n
     -h, --help: print this help"
   doLog "$msg"
   exit 1
@@ -30,6 +33,10 @@ while [ "$1" != "" ]; do
     "-l" | "--languages")
       shift
       declare LANGUAGES=$(echo "-l $1" | sed "s/,/ -l /g")
+      ;;
+    "-os" | "--opensubtitles")
+      shift
+      declare OPENSUBTITLES_CREDENTIALS=$(echo "--opensubtitles $1" | sed "s/:/ /g")
       ;;
     *)
       printUsage
@@ -54,8 +61,8 @@ fi
 doLog "Looking for subtitles for: ${VIDEO_PATH}"
 
 doLog "Executing subliminal"
-doLog "subliminal download ${LANGUAGES} ${VIDEO_PATH}"
-subliminal download ${LANGUAGES} "${VIDEO_PATH}" >> $LOG_FILE 2>&1
+doLog "subliminal ${OPENSUBTITLES_CREDENTIALS} download ${LANGUAGES} ${VIDEO_PATH}"
+subliminal ${OPENSUBTITLES_CREDENTIALS} download ${LANGUAGES} "${VIDEO_PATH}" >> $LOG_FILE 2>&1
   
 # Look for not found subtitles
 declare LANG_ARRAY=($(echo ${LANGUAGES} | sed "s/-l //g"))
