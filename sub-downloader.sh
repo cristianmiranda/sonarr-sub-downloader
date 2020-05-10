@@ -19,6 +19,9 @@ function printUsage {
     -os, --opensubtitles <opensubtitles credentials>:\n
     \t Opensubtitles credentials <username>:<password>.\n
     \t example: sub-downloader.sh -os rick mycoolpassword\n\n
+    -a7, --addic7ed <addic7ed credentials>:\n
+    \t Addic7ed credentials <username>:<password>.\n
+    \t example: sub-downloader.sh -a7 rick mycoolpassword\n\n
     -h, --help: print this help"
   doLog "$msg"
   exit 1
@@ -37,6 +40,10 @@ while [ "$1" != "" ]; do
     "-os" | "--opensubtitles")
       shift
       declare OPENSUBTITLES_CREDENTIALS=$(echo "--opensubtitles $1" | sed "s/:/ /g")
+      ;;
+    "-a7" | "--addic7ed")
+      shift
+      declare ADDICTED_CREDENTIALS=$(echo "--addic7ed $1" | sed "s/:/ /g")
       ;;
     *)
       printUsage
@@ -61,8 +68,8 @@ fi
 doLog "Looking for subtitles for: ${VIDEO_PATH}"
 
 doLog "Executing subliminal"
-doLog "subliminal ${OPENSUBTITLES_CREDENTIALS} download ${LANGUAGES} ${VIDEO_PATH}"
-subliminal ${OPENSUBTITLES_CREDENTIALS} download ${LANGUAGES} "${VIDEO_PATH}" >> $LOG_FILE 2>&1
+doLog "subliminal ${OPENSUBTITLES_CREDENTIALS} ${ADDICTED_CREDENTIALS} download ${LANGUAGES} ${VIDEO_PATH}"
+subliminal ${OPENSUBTITLES_CREDENTIALS} ${ADDICTED_CREDENTIALS} download ${LANGUAGES} "${VIDEO_PATH}" >> $LOG_FILE 2>&1
   
 # Look for not found subtitles
 declare LANG_ARRAY=($(echo ${LANGUAGES} | sed "s/-l //g"))
